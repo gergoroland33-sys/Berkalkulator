@@ -2,26 +2,49 @@
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
-<title>Bérkalkulátor Forvia SMT</title>
+<title>Bérkalkulátor</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body { font-family: Arial, sans-serif; margin: 20px; max-width: 600px; }
-label { display: block; margin-top: 10px; }
+label { display: block; margin-top: 10px; font-weight: bold; }
 input, select { width: 100%; padding: 8px; margin-top: 5px; }
+small { color: #555; display: block; margin-top: 3px; }
 button { margin-top: 15px; padding: 10px; width: 100%; }
 .result { margin-top: 20px; font-weight: bold; }
 .summary { margin-top: 15px; background: #f0f0f0; padding: 10px; border-radius: 5px; }
 </style>
 </head>
 <body>
-<h1>Bérkalkulátor Forvia SMT</h1>
+<h1>Bérkalkulátor</h1>
 
-<label>Besorolási bér (Ft/hó): <input type="number" id="besorolas"></label>
-<label>Pótlék nélküli óraszám: <input type="number" id="oraszam"></label>
-<label>Éjszakás óraszám (30%): <input type="number" id="ejjszaka"></label>
-<label>Vasárnapi óraszám (50%): <input type="number" id="vasarnap"></label>
-<label>Jelenléti bónusz (Ft): <input type="number" id="jelenleti" value="0"></label>
-<label>Termelékenységi bónusz (Ft): <input type="number" id="termeles" value="0"></label>
+<label>Besorolási bér (Ft/hó):
+<input type="number" id="besorolas">
+</label>
+
+<label>Pótlék nélküli óraszám:
+<input type="number" id="oraszam">
+<small>➡ Ide tartozik minden hétfőtől szombat nappalig ledolgozott óraszám, ahol nincs pótlék.</small>
+</label>
+
+<label>Éjszakás óraszám (30%):
+<input type="number" id="ejjszaka">
+<small>➡ Az adott hónapban ledolgozott összes éjszakai óra (általában 22:00–06:00 között).</small>
+</label>
+
+<label>Vasárnapi óraszám (50%):
+<input type="number" id="vasarnap">
+<small>➡ Szombat éjféltől vasárnap éjfélig tartó munkaórák, ha volt ilyen.</small>
+</label>
+
+<label>Jelenléti bónusz (Ft):
+<input type="number" id="jelenleti" value="0">
+<small>➡ Opcionális, hozzáadódik a bruttóhoz.</small>
+</label>
+
+<label>Termelékenységi bónusz (Ft):
+<input type="number" id="termeles" value="0">
+<small>➡ Opcionális, hozzáadódik a bruttóhoz.</small>
+</label>
 
 <h3>Túlóra számítás</h3>
 <label>Túlóra típusa:
@@ -32,7 +55,10 @@ button { margin-top: 15px; padding: 10px; width: 100%; }
 <option value="vasarnap">Vasárnap (50%)</option>
 </select>
 </label>
-<label>Túlóra óraszám: <input type="number" id="tuloraOra" value="0"></label>
+<label>Túlóra óraszám:
+<input type="number" id="tuloraOra" value="0">
+<small>➡ Add meg, ha volt túlóra, és válaszd ki a típusát.</small>
+</label>
 
 <label><input type="checkbox" id="under25"> 25 év alatti vagyok</label>
 
