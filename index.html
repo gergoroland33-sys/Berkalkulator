@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<title>Bérkalkulátor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; max-width: 600px; }
+label { display: block; margin-top: 10px; }
+input, select { width: 100%; padding: 8px; margin-top: 5px; }
+button { margin-top: 15px; padding: 10px; width: 100%; }
+.result { margin-top: 20px; font-weight: bold; }
+.summary { margin-top: 15px; background: #f0f0f0; padding: 10px; border-radius: 5px; }
+</style>
+</head>
+<body>
+<h1>Bérkalkulátor</h1>
+
+<label>Besorolási bér (Ft/hó): <input type="number" id="besorolas"></label>
+<label>Pótlék nélküli óraszám: <input type="number" id="oraszam"></label>
+<label>Éjszakás óraszám (30%): <input type="number" id="ejjszaka"></label>
+<label>Vasárnapi óraszám (50%): <input type="number" id="vasarnap"></label>
+<label>Jelenléti bónusz (Ft): <input type="number" id="jelenleti" value="0"></label>
+<label>Termelékenységi bónusz (Ft): <input type="number" id="termeles" value="0"></label>
+
+<h3>Túlóra számítás</h3>
+<label>Túlóra típusa:
+<select id="tuloraTipus">
+<option value="none">Nincs</option>
+<option value="hetkoznap">Hétköznap (nappal)</option>
+<option value="ejjszaka">Éjszaka (30%)</option>
+<option value="vasarnap">Vasárnap (50%)</option>
+</select>
+</label>
+<label>Túlóra óraszám: <input type="number" id="tuloraOra" value="0"></label>
+
+<label><input type="checkbox" id="under25"> 25 év alatti vagyok</label>
+
+<button onclick="szamol()">Számolás</button>
+
+<div class="summary" id="osszefoglalas"></div>
+<div class="result" id="eredmeny"></div>
+
+<script>
+function szamol() {
+const besorolas = parseFloat(document.getElementById('besorolas').value) || 0;
+const oraszam = parseFloat(document.getElementById('oraszam').value) || 0;
+const ejjszaka = parseFloat(document.getElementById('ejjszaka').value) || 0;
+const vasarnap = parseFloat(document.getElementById('vasarnap').value) || 0;
+const jelenleti = parseFloat(document.getElementById('jelenleti').value) || 0;
+const termeles = parseFloat(document.getElementById('termeles').value) || 0;
+const tuloraTipus = document.getElementById('tuloraTipus').value;
+const tuloraOra = parseFloat(document.getElementById('tuloraOra').value) || 0;
+const under25 = document.getElementById('under25').checked;
+
+const oraber = besorolas / 174;
+
+// Alap bruttó
+let brutto = 0;
+brutto += oraber * oraszam;
+brutto += oraber * ejjszaka * 1.3;
+brutto += oraber * vasarnap * 1.5;
+brutto += jelenleti + termeles;
+
+// Túlóra számítás
+if (tuloraTipus !== "none" && tuloraOra > 0) {
+if (tuloraTipus === "hetkoznap") {
+brutto += oraber * tuloraOra + (besorolas/180) * tuloraOra;
+} else if (tuloraTipus === "ejjszaka") {
+brutto += oraber * tuloraOra * 1.3 + (besorolas/180) * tuloraOra;
+} else if (tuloraTipus === "vasarnap") {
+brutto += oraber * tuloraOra * 1.5 + (besorolas/180) * tuloraOra;
+}
+}
+
+// Nettó szorzó
+const nettoSzorz = under25 ? 0.815 : 0.665;
+const netto = brutto * nettoSzorz;
+
+// Összegzés
+const osszOra = oraszam + ejjszaka + vasarnap + tuloraOra;
+
+document.getElementById('osszefoglalas').innerHTML =
+`Összes óraszám: ${osszOra} óra<br>` +
+`Alap óraszám: ${oraszam} óra<br>` +
+`Éjszakás óraszám: ${ejjszaka} óra<br>` +
+`Vasárnapi óraszám: ${vasarnap} óra<br>` +
+`Túlóra: ${tuloraOra} óra (${tuloraTipus})`;
+
+document.getElementById('eredmeny').innerHTML =
+`Bruttó bér: ${brutto.toFixed(0)} Ft<br>` +
+`Nettó bér: ${netto.toFixed(0)} Ft`;
+}
+</script>
+</body>
+</html>
