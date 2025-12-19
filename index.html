@@ -5,10 +5,10 @@
 <title>Bérkalkulátor</title>
 <style>
 body { font-family: Arial; max-width: 600px; margin: auto; }
-label { margin-top: 8px; display: block; }
-input { width: 100%; padding: 6px; }
-button { margin-top: 15px; padding: 10px; width: 100%; }
-.result { margin-top: 15px; font-weight: bold; }
+label { display:block; margin-top:8px; }
+input { width:100%; padding:6px; }
+button { margin-top:15px; padding:10px; width:100%; }
+.result { margin-top:15px; font-weight:bold; }
 </style>
 </head>
 <body>
@@ -16,34 +16,28 @@ button { margin-top: 15px; padding: 10px; width: 100%; }
 <h2>Havi bérkalkulátor</h2>
 
 <label>Havi alapbér (Ft)</label>
-<input id="alapber">
+<input id="alapber" value="480816">
 
-<p><b>Havi elszámolási óraszám: 174 óra</b></p>
+<p><b>Havi normaidő: 174 óra</b></p>
 
-<h3>Pótlékok (órában)</h3>
+<label>Ténylegesen ledolgozott órák</label>
+<input id="ledolgozott" value="176">
 
-<label>Műszakpótlék 30%</label>
-<input id="muszak30" value="0">
+<h3>Pótlékos órák</h3>
 
-<label>Vasárnapi pótlék 50%</label>
-<input id="vasarnap50" value="0">
+<label>Műszakpótlék 30% (óra)</label>
+<input id="muszak30" value="93">
 
-<label>Túlóra (200%)</label>
-<input id="tulora" value="0">
+<label>Vasárnapi pótlék 50% (óra)</label>
+<input id="vasarnap50" value="31">
 
 <h3>Bónuszok</h3>
 
 <label>Jelenléti bónusz (Ft)</label>
-<input id="jelenleti" value="0">
+<input id="jelenleti" value="33000">
 
 <label>Termelékenységi bónusz (Ft)</label>
-<input id="termekenyseg" value="0">
-
-<h3>Adózás</h3>
-
-<label>
-<input type="checkbox" id="fiatal"> 25 év alatti (SZJA mentesség)
-</label>
+<input id="termekenyseg" value="24800">
 
 <button onclick="szamol()">Számol</button>
 
@@ -51,36 +45,42 @@ button { margin-top: 15px; padding: 10px; width: 100%; }
 
 <script>
 function szamol() {
-let alapber = +alapberEl.value;
-let oraber = alapber / 174;
+const alapber = +alapberEl.value;
+const ledolgozott = +ledolgozottEl.value;
 
-let brutto =
-alapber +
-oraber * 0.30 * muszak30El.value +
-oraber * 0.50 * vasarnap50El.value +
-oraber * 2.00 * tuloraEl.value +
+const oraber = alapber / 174;
+
+const besorolasiber = oraber * ledolgozott;
+const muszakpotlek = oraber * 0.30 * muszak30El.value;
+const vasarnappotlek = oraber * 0.50 * vasarnap50El.value;
+
+const brutto =
+besorolasiber +
+muszakpotlek +
+vasarnappotlek +
 +jelenletiEl.value +
 +termekenysegEl.value;
 
-let szja = fiatalEl.checked ? 0 : brutto * 0.15;
-let tb = brutto * 0.185;
-let netto = brutto - szja - tb;
+const szja = brutto * 0.15;
+const tb = brutto * 0.185;
+const netto = brutto - szja - tb;
 
 eredmeny.innerHTML = `
-Bruttó bér: ${brutto.toFixed(0)} Ft<br>
-SZJA: ${szja.toFixed(0)} Ft<br>
-TB járulék (18,5%): ${tb.toFixed(0)} Ft<br>
-Nettó bér: ${netto.toFixed(0)} Ft
+Órabér: ${oraber.toFixed(2)} Ft<br>
+Besorolási bér: ${besorolasiber.toFixed(0)} Ft<br>
+Műszakpótlék: ${muszakpotlek.toFixed(0)} Ft<br>
+Vasárnapi pótlék: ${vasarnappotlek.toFixed(0)} Ft<br><br>
+Bruttó: ${brutto.toFixed(0)} Ft<br>
+Nettó: ${netto.toFixed(0)} Ft
 `;
 }
 
 const alapberEl = document.getElementById("alapber");
+const ledolgozottEl = document.getElementById("ledolgozott");
 const muszak30El = document.getElementById("muszak30");
 const vasarnap50El = document.getElementById("vasarnap50");
-const tuloraEl = document.getElementById("tulora");
 const jelenletiEl = document.getElementById("jelenleti");
 const termekenysegEl = document.getElementById("termekenyseg");
-const fiatalEl = document.getElementById("fiatal");
 const eredmeny = document.getElementById("eredmeny");
 </script>
 
