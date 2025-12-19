@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> Forvia SMT Bérkalkulátor 12H</title>
+<title>Bérkalkulátor 12H - Keret elszámolással</title>
 <style>
 :root {
 --primary: #2563eb;
@@ -21,11 +21,7 @@ padding: 15px;
 color: #1e293b;
 }
 
-.container {
-max-width: 500px;
-margin: 0 auto;
-}
-
+.container { max-width: 500px; margin: 0 auto; }
 h2 { text-align: center; color: #0f172a; margin-bottom: 20px; }
 
 .card {
@@ -60,25 +56,8 @@ width: 100%;
 padding: 12px;
 border: 1px solid #cbd5e1;
 border-radius: 8px;
-font-size: 16px; /* Megelőzi a zoomolást iOS-en */
+font-size: 16px;
 box-sizing: border-box;
-background-color: #fff;
-}
-
-input[type="checkbox"] {
-width: 18px;
-height: 18px;
-margin-right: 10px;
-vertical-align: middle;
-}
-
-.checkbox-label {
-font-size: 1rem;
-font-weight: 500;
-color: #1e293b;
-display: flex;
-align-items: center;
-cursor: pointer;
 }
 
 button {
@@ -91,10 +70,7 @@ border-radius: 12px;
 font-size: 1.1rem;
 font-weight: bold;
 cursor: pointer;
-transition: transform 0.1s;
 }
-
-button:active { transform: scale(0.98); }
 
 .result-card {
 display: none;
@@ -105,7 +81,6 @@ border-radius: 16px;
 margin-top: 20px;
 }
 
-.netto-title { font-size: 0.9rem; color: #065f46; text-transform: uppercase; letter-spacing: 0.05em; }
 .netto-amount { font-size: 2.2rem; font-weight: 800; color: #065f46; margin: 5px 0; }
 
 .breakdown {
@@ -116,73 +91,50 @@ border-top: 1px dashed #a7f3d0;
 margin-top: 15px;
 padding-top: 15px;
 }
-
-.flex-row { display: flex; gap: 10px; }
-.flex-row > div { flex: 1; }
 </style>
 </head>
 <body>
 
 <div class="container">
-<h2>Forvia SMT Bérkalkulátor</h2>
+<h2>Forcia SMT Bérkalkulátor</h2>
 
 <div class="card">
-<h3>Alapbér</h3>
+<h3>Alapadatok</h3>
 <div class="input-group">
 <label>Besorolási bér (Ft)</label>
-<input type="number" id="alapber" placeholder="Írd ide a besorolási béredet">
+<input type="number" id="alapber" placeholder="Ird be az alapbéred">
 </div>
-<label class="checkbox-label">
-<input type="checkbox" id="fiatal"> 25 év alatti (SZJA mentes)
+<label style="display: flex; align-items: center; cursor: pointer;">
+<input type="checkbox" id="fiatal" style="width:18px; height:18px; margin-right:10px;"> 25 év alatti (SZJA mentes)
 </label>
 </div>
 
-<div class="card">
-<h3>Beosztás szerinti pótlékok</h3>
-<div class="flex-row">
+<div class="card" style="background-color: #fffbeb; border: 1px solid #fef3c7;">
+<h3>Munkaidőkeret elszámolás</h3>
 <div class="input-group">
-<label>Műszak 30% (óra)</label>
-<input type="number" id="m30" placeholder="0">
-</div>
-<div class="input-group">
-<label>Vasárnap 50% (óra)</label>
-<input type="number" id="v50" placeholder="0">
-</div>
+<label>Volt plusz keret elszámolás? (óra)</label>
+<input type="number" id="keret_ora" placeholder="Ha nem volt, hagyd üresen">
 </div>
 </div>
 
 <div class="card">
-<h3>Túlórák (Pihenőnapi)</h3>
-<div class="input-group">
-<label>Sima túlóra (óra)</label>
-<input type="number" id="t_sima" placeholder="0">
-</div>
-<div class="input-group">
-<label>Éjszakai túlóra (óra)</label>
-<input type="number" id="t_ejszaka" placeholder="0">
-</div>
-<div class="input-group">
-<label>Vasárnapi túlóra (óra)</label>
-<input type="number" id="t_vasarnap" placeholder="0">
-</div>
+<h3>Pótlékok és Túlórák</h3>
+<div class="input-group"><label>Műszak 30% (óra)</label><input type="number" id="m30"></div>
+<div class="input-group"><label>Vasárnap 50% (óra)</label><input type="number" id="v50"></div>
+<div class="input-group"><label>Sima túlóra (100%, óra)</label><input type="number" id="t_sima"></div>
+<div class="input-group"><label>Éjszakai túlóra (100%+30%, óra)</label><input type="number" id="t_ejsz"></div>
 </div>
 
 <div class="card">
 <h3>Bónuszok</h3>
-<div class="input-group">
-<label>Jelenléti bónusz (Ft)</label>
-<input type="number" id="b_jelenleti" placeholder="0">
-</div>
-<div class="input-group">
-<label>Termelékenységi bónusz (Ft)</label>
-<input type="number" id="b_term" placeholder="0">
-</div>
+<div class="input-group"><label>Jelenléti bónusz (Ft)</label><input type="number" id="b_jel"></div>
+<div class="input-group"><label>Termelékenységi bónusz (Ft)</label><input type="number" id="b_term"></div>
 </div>
 
-<button onclick="szamol()">Számítás futtatása</button>
+<button onclick="szamol()">Számítás</button>
 
-<div id="eredmeny_doboz" class="result-card">
-<div class="netto-title">Várható nettó utalás:</div>
+<div id="eredmeny_box" class="result-card">
+<div style="font-size: 0.9rem; color: #065f46;">Várható nettó:</div>
 <div class="netto-amount" id="netto_osszeg">0 Ft</div>
 <div class="breakdown" id="reszletek"></div>
 </div>
@@ -190,76 +142,49 @@ padding-top: 15px;
 
 <script>
 function szamol() {
-// Alapadatok
 const alap = +document.getElementById("alapber").value || 0;
 const isFiatal = document.getElementById("fiatal").checked;
 
-// Osztószámok (a megbeszéltek szerint)
-const o174 = 174; // Pótlékokhoz
-const o180 = 180; // Túlóra alaphoz
+const o174 = 174;
+const o180 = 180;
+const orb174 = alap / o174;
+const orb180 = alap / o180;
 
-const oraber174 = alap / o174;
-const oraber180 = alap / o180;
+// Keret elszámolás matek (28 órás példád alapján)
+const k_ora = +document.getElementById("keret_ora").value || 0;
+const keret_alap = orb180 * k_ora; // 100% alap
+const keret_potlek = orb174 * 0.5 * k_ora; // 50% pótlék
+const keret_total = keret_alap + keret_potlek;
 
-// Beosztás szerinti pótlékok
-const p_m30 = oraber174 * 0.3 * (+document.getElementById("m30").value || 0);
-const p_v50 = oraber174 * 0.5 * (+document.getElementById("v50").value || 0);
+// Többi pótlék és túlóra
+const p_m30 = orb174 * 0.3 * (+document.getElementById("m30").value || 0);
+const p_v50 = orb174 * 0.5 * (+document.getElementById("v50").value || 0);
 
-// Túlórák számítása
 const h_sima = +document.getElementById("t_sima").value || 0;
-const h_ejsz = +document.getElementById("t_ejszaka").value || 0;
-const h_vas = +document.getElementById("t_vasarnap").value || 0;
-const ossz_t_ora = h_sima + h_ejsz + h_vas;
+const h_ejsz = +document.getElementById("t_ejsz").value || 0;
+const ossz_t = h_sima + h_ejsz;
+const t_total = (orb180 * ossz_t) + (orb174 * 1.0 * ossz_t) + (orb174 * 0.3 * h_ejsz);
 
-// Túlóra matematika: (Alap 180-nal) + (100% pótlék 174-gyel) + (Extra pótlékok 174-gyel)
-const t_alap_resz = oraber180 * ossz_t_ora;
-const t_potlek_100 = oraber174 * 1.0 * ossz_t_ora;
-const t_extra_30 = oraber174 * 0.3 * h_ejsz;
-const t_extra_50 = oraber174 * 0.5 * h_vas;
+const bonuszok = (+document.getElementById("b_jel").value || 0) + (+document.getElementById("b_term").value || 0);
 
-const tulora_total = t_alap_resz + t_potlek_100 + t_extra_30 + t_extra_50;
+const brutto = alap + p_m30 + p_v50 + keret_total + t_total + bonuszok;
 
-// Bónuszok
-const b1 = +document.getElementById("b_jelenleti").value || 0;
-const b2 = +document.getElementById("b_term").value || 0;
-const ossz_bonusz = b1 + b2;
-
-// Bruttó összesítés
-const brutto = alap + p_m30 + p_v50 + tulora_total + ossz_bonusz;
-
-// Adózás (SZJA mentesség figyelembe vétele)
 let szja = brutto * 0.15;
-if (isFiatal) {
-// 2025-ös becsült SZJA mentes keret: 576 601 Ft
-const mentes_keret = 576601;
-if (brutto <= mentes_keret) {
-szja = 0;
-} else {
-szja = (brutto - mentes_keret) * 0.15;
-}
-}
+if (isFiatal && brutto <= 576601) szja = 0;
+else if (isFiatal) szja = (brutto - 576601) * 0.15;
 
-const tb = brutto * 0.185;
-const netto = brutto - szja - tb;
+const netto = brutto - szja - (brutto * 0.185);
 
-// Megjelenítés
-document.getElementById("eredmeny_doboz").style.display = "block";
+document.getElementById("eredmeny_box").style.display = "block";
 document.getElementById("netto_osszeg").innerText = Math.round(netto).toLocaleString() + " Ft";
-
 document.getElementById("reszletek").innerHTML = `
-<b>Bruttó bér:</b> ${Math.round(brutto).toLocaleString()} Ft<br>
-- Ebből túlóra: ${Math.round(tulora_total).toLocaleString()} Ft<br>
-- Ebből bónuszok: ${ossz_bonusz.toLocaleString()} Ft<br>
-<br>
-<b>Levonások:</b><br>
-- SZJA (15%): ${Math.round(szja).toLocaleString()} Ft<br>
-- TB járulék (18,5%): ${Math.round(tb).toLocaleString()} Ft
+Bruttó: ${Math.round(brutto).toLocaleString()} Ft<br>
+- Ebből Keret elszámolás: ${Math.round(keret_total).toLocaleString()} Ft<br>
+- Ebből Túlórák: ${Math.round(t_total).toLocaleString()} Ft
 `;
-
-// Görgetés az eredményhez mobilon
-document.getElementById("eredmeny_doboz").scrollIntoView({ behavior: 'smooth' });
+document.getElementById("eredmeny_box").scrollIntoView({ behavior: 'smooth' });
 }
 </script>
-
 </body>
 </html>
+
