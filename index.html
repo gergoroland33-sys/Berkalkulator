@@ -36,6 +36,12 @@ box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
 margin-bottom: 15px;
 }
 
+/* Keret elszámolás kiemelése */
+.card.highlight {
+background-color: #fffbeb;
+border: 1px solid #fef3c7;
+}
+
 h3 {
 font-size: 1.1rem;
 margin-top: 0;
@@ -165,8 +171,9 @@ padding-top: 15px;
 <label>Vasárnapi túlóra (óra)</label>
 <input type="number" id="t_vasarnap" placeholder="0">
 </div>
-<div class="input-group">
-<label>Keret elszámolás (óra)</label>
+
+<div class="input-group" style="background-color: #fffbeb; padding: 10px; border-radius: 8px; border: 1px solid #fef3c7;">
+<label style="color: #92400e;">Keret elszámolás (óra)</label>
 <input type="number" id="t_keret" placeholder="0">
 </div>
 </div>
@@ -213,13 +220,11 @@ const h_keret = +document.getElementById("t_keret").value || 0;
 
 const ossz_t_ora = h_sima + h_ejsz + h_vas;
 
-// Normál túlóra matek
 const t_alap_resz = oraber180 * ossz_t_ora;
 const t_potlek_100 = oraber174 * 1.0 * ossz_t_ora;
 const t_extra_30 = oraber174 * 0.3 * h_ejsz;
 const t_extra_50 = oraber174 * 0.5 * h_vas;
 
-// Keret elszámolás matek: Alap (180) + 50% pótlék (174)
 const keret_alap = oraber180 * h_keret;
 const keret_potlek_50 = oraber174 * 0.5 * h_keret;
 
