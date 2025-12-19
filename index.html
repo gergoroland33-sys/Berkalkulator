@@ -2,121 +2,263 @@
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
-<title>Havi bérkalkulátor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bérkalkulátor 12H</title>
 <style>
-body {
-font-family: Arial;
-max-width: 600px;
-margin: auto;
+:root {
+--primary: #2563eb;
+--secondary: #64748b;
+--success: #16a34a;
+--bg: #f8fafc;
+--card: #ffffff;
 }
+
+body {
+font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+background-color: var(--bg);
+margin: 0;
+padding: 15px;
+color: #1e293b;
+}
+
+.container {
+max-width: 500px;
+margin: 0 auto;
+}
+
+h2 { text-align: center; color: #0f172a; margin-bottom: 20px; }
+
+.card {
+background: var(--card);
+padding: 20px;
+border-radius: 16px;
+box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+margin-bottom: 15px;
+}
+
+h3 {
+font-size: 1.1rem;
+margin-top: 0;
+margin-bottom: 15px;
+color: var(--primary);
+border-bottom: 1px solid #e2e8f0;
+padding-bottom: 8px;
+}
+
+.input-group { margin-bottom: 15px; }
+
 label {
 display: block;
-margin-top: 8px;
+font-size: 0.9rem;
+font-weight: 600;
+margin-bottom: 5px;
+color: var(--secondary);
 }
-input {
+
+input[type="number"] {
 width: 100%;
-padding: 6px;
-}
-button {
-margin-top: 15px;
-padding: 10px;
-width: 100%;
-}
-.result {
-margin-top: 20px;
 padding: 12px;
-border: 1px solid #ccc;
+border: 1px solid #cbd5e1;
+border-radius: 8px;
+font-size: 16px; /* Megelőzi a zoomolást iOS-en */
+box-sizing: border-box;
+background-color: #fff;
 }
-.netto {
-font-size: 22px;
+
+input[type="checkbox"] {
+width: 18px;
+height: 18px;
+margin-right: 10px;
+vertical-align: middle;
+}
+
+.checkbox-label {
+font-size: 1rem;
+font-weight: 500;
+color: #1e293b;
+display: flex;
+align-items: center;
+cursor: pointer;
+}
+
+button {
+width: 100%;
+padding: 16px;
+background-color: var(--primary);
+color: white;
+border: none;
+border-radius: 12px;
+font-size: 1.1rem;
 font-weight: bold;
-color: green;
+cursor: pointer;
+transition: transform 0.1s;
 }
+
+button:active { transform: scale(0.98); }
+
+.result-card {
+display: none;
+background: #ecfdf5;
+border: 2px solid var(--success);
+padding: 20px;
+border-radius: 16px;
+margin-top: 20px;
+}
+
+.netto-title { font-size: 0.9rem; color: #065f46; text-transform: uppercase; letter-spacing: 0.05em; }
+.netto-amount { font-size: 2.2rem; font-weight: 800; color: #065f46; margin: 5px 0; }
+
+.breakdown {
+font-size: 0.95rem;
+line-height: 1.6;
+color: #334155;
+border-top: 1px dashed #a7f3d0;
+margin-top: 15px;
+padding-top: 15px;
+}
+
+.flex-row { display: flex; gap: 10px; }
+.flex-row > div { flex: 1; }
 </style>
 </head>
 <body>
 
-<h2>Havi bérkalkulátor</h2>
+<div class="container">
+<h2>Bérkalkulátor</h2>
 
-<label>Havi besorolási bér (Ft)</label>
-<input id="alapber">
-
-<p><b>Havi normaidő: 174 óra</b></p>
-
-<h3>Pótlékos órák</h3>
-
-<label>Műszakpótlék 30% (óra)</label>
-<input id="muszak30">
-
-<label>Vasárnapi pótlék 50% (óra)</label>
-<input id="vasarnap50">
-
-<h3>Bónuszok</h3>
-
-<label>Jelenléti bónusz (Ft)</label>
-<input id="jelenleti">
-
-<label>Termelékenységi bónusz (Ft)</label>
-<input id="termekenyseg">
-
-<h3>Adózás</h3>
-
-<label>
-<input type="checkbox" id="fiatal">
-25 év alatti (SZJA mentesség)
+<div class="card">
+<h3>Alapbér</h3>
+<div class="input-group">
+<label>Besorolási bér (Ft)</label>
+<input type="number" id="alapber" value="480816">
+</div>
+<label class="checkbox-label">
+<input type="checkbox" id="fiatal"> 25 év alatti (SZJA mentes)
 </label>
+</div>
 
-<button onclick="szamol()">Számol</button>
+<div class="card">
+<h3>Beosztás szerinti pótlékok</h3>
+<div class="flex-row">
+<div class="input-group">
+<label>Műszak 30% (óra)</label>
+<input type="number" id="m30" placeholder="0">
+</div>
+<div class="input-group">
+<label>Vasárnap 50% (óra)</label>
+<input type="number" id="v50" placeholder="0">
+</div>
+</div>
+</div>
 
-<div class="result" id="eredmeny"></div>
+<div class="card">
+<h3>Túlórák (Pihenőnapi)</h3>
+<div class="input-group">
+<label>Sima túlóra (óra)</label>
+<input type="number" id="t_sima" placeholder="0">
+</div>
+<div class="input-group">
+<label>Éjszakai túlóra (óra)</label>
+<input type="number" id="t_ejszaka" placeholder="0">
+</div>
+<div class="input-group">
+<label>Vasárnapi túlóra (óra)</label>
+<input type="number" id="t_vasarnap" placeholder="0">
+</div>
+</div>
+
+<div class="card">
+<h3>Bónuszok</h3>
+<div class="input-group">
+<label>Jelenléti bónusz (Ft)</label>
+<input type="number" id="b_jelenleti" placeholder="0">
+</div>
+<div class="input-group">
+<label>Termelékenységi bónusz (Ft)</label>
+<input type="number" id="b_term" placeholder="0">
+</div>
+</div>
+
+<button onclick="szamol()">Számítás futtatása</button>
+
+<div id="eredmeny_doboz" class="result-card">
+<div class="netto-title">Várható nettó utalás:</div>
+<div class="netto-amount" id="netto_osszeg">0 Ft</div>
+<div class="breakdown" id="reszletek"></div>
+</div>
+</div>
 
 <script>
 function szamol() {
+// Alapadatok
+const alap = +document.getElementById("alapber").value || 0;
+const isFiatal = document.getElementById("fiatal").checked;
 
-const alapber = +alapberEl.value || 0;
+// Osztószámok (a megbeszéltek szerint)
+const o174 = 174; // Pótlékokhoz
+const o180 = 180; // Túlóra alaphoz
 
-const oraber = alapber / 174;
+const oraber174 = alap / o174;
+const oraber180 = alap / o180;
 
-const muszakpotlek = oraber * 0.30 * (+muszak30El.value || 0);
-const vasarnappotlek = oraber * 0.50 * (+vasarnap50El.value || 0);
+// Beosztás szerinti pótlékok
+const p_m30 = oraber174 * 0.3 * (+document.getElementById("m30").value || 0);
+const p_v50 = oraber174 * 0.5 * (+document.getElementById("v50").value || 0);
 
-const bonuszok =
-(+jelenletiEl.value || 0) +
-(+termekenysegEl.value || 0);
+// Túlórák számítása
+const h_sima = +document.getElementById("t_sima").value || 0;
+const h_ejsz = +document.getElementById("t_ejszaka").value || 0;
+const h_vas = +document.getElementById("t_vasarnap").value || 0;
+const ossz_t_ora = h_sima + h_ejsz + h_vas;
 
-const brutto =
-alapber +
-muszakpotlek +
-vasarnappotlek +
-bonuszok;
+// Túlóra matematika: (Alap 180-nal) + (100% pótlék 174-gyel) + (Extra pótlékok 174-gyel)
+const t_alap_resz = oraber180 * ossz_t_ora;
+const t_potlek_100 = oraber174 * 1.0 * ossz_t_ora;
+const t_extra_30 = oraber174 * 0.3 * h_ejsz;
+const t_extra_50 = oraber174 * 0.5 * h_vas;
 
-const szja = fiatalEl.checked ? 0 : brutto * 0.15;
+const tulora_total = t_alap_resz + t_potlek_100 + t_extra_30 + t_extra_50;
+
+// Bónuszok
+const b1 = +document.getElementById("b_jelenleti").value || 0;
+const b2 = +document.getElementById("b_term").value || 0;
+const ossz_bonusz = b1 + b2;
+
+// Bruttó összesítés
+const brutto = alap + p_m30 + p_v50 + tulora_total + ossz_bonusz;
+
+// Adózás (SZJA mentesség figyelembe vétele)
+let szja = brutto * 0.15;
+if (isFiatal) {
+// 2025-ös becsült SZJA mentes keret: 576 601 Ft
+const mentes_keret = 576601;
+if (brutto <= mentes_keret) {
+szja = 0;
+} else {
+szja = (brutto - mentes_keret) * 0.15;
+}
+}
+
 const tb = brutto * 0.185;
 const netto = brutto - szja - tb;
 
-eredmeny.innerHTML = `
-<div class="netto">Ennyit utalnak: ${netto.toFixed(0)} Ft</div>
+// Megjelenítés
+document.getElementById("eredmeny_doboz").style.display = "block";
+document.getElementById("netto_osszeg").innerText = Math.round(netto).toLocaleString() + " Ft";
 
-<hr>
-
-Alapbér: ${alapber.toFixed(0)} Ft<br>
-Pótlékok összesen: ${(muszakpotlek + vasarnappotlek).toFixed(0)} Ft<br>
-Bónuszok összesen: ${bonuszok.toFixed(0)} Ft<br>
-
-<hr>
-
-Bruttó összesen: ${brutto.toFixed(0)} Ft<br>
-Levonások összesen: ${(szja + tb).toFixed(0)} Ft
+document.getElementById("reszletek").innerHTML = `
+<b>Bruttó bér:</b> ${Math.round(brutto).toLocaleString()} Ft<br>
+- Ebből túlóra: ${Math.round(tulora_total).toLocaleString()} Ft<br>
+- Ebből bónuszok: ${ossz_bonusz.toLocaleString()} Ft<br>
+<br>
+<b>Levonások:</b><br>
+- SZJA (15%): ${Math.round(szja).toLocaleString()} Ft<br>
+- TB járulék (18,5%): ${Math.round(tb).toLocaleString()} Ft
 `;
-}
 
-const alapberEl = document.getElementById("alapber");
-const muszak30El = document.getElementById("muszak30");
-const vasarnap50El = document.getElementById("vasarnap50");
-const jelenletiEl = document.getElementById("jelenleti");
-const termekenysegEl = document.getElementById("termekenyseg");
-const fiatalEl = document.getElementById("fiatal");
-const eredmeny = document.getElementById("eredmeny");
+// Görgetés az eredményhez mobilon
+document.getElementById("eredmeny_doboz").scrollIntoView({ behavior: 'smooth' });
+}
 </script>
 
 </body>
