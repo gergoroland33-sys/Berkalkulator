@@ -2,13 +2,36 @@
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
-<title>Bérkalkulátor</title>
+<title>Havi bérkalkulátor</title>
 <style>
-body { font-family: Arial; max-width: 600px; margin: auto; }
-label { display:block; margin-top:8px; }
-input { width:100%; padding:6px; }
-button { margin-top:15px; padding:10px; width:100%; }
-.result { margin-top:15px; font-weight:bold; }
+body {
+font-family: Arial;
+max-width: 600px;
+margin: auto;
+}
+label {
+display: block;
+margin-top: 8px;
+}
+input {
+width: 100%;
+padding: 6px;
+}
+button {
+margin-top: 15px;
+padding: 10px;
+width: 100%;
+}
+.result {
+margin-top: 20px;
+padding: 12px;
+border: 1px solid #ccc;
+}
+.netto {
+font-size: 22px;
+font-weight: bold;
+color: green;
+}
 </style>
 </head>
 <body>
@@ -19,9 +42,6 @@ button { margin-top:15px; padding:10px; width:100%; }
 <input id="alapber">
 
 <p><b>Havi normaidő: 174 óra</b></p>
-
-<label>Ténylegesen ledolgozott órák (tájékoztató)</label>
-<input id="ledolgozott">
 
 <h3>Pótlékos órák</h3>
 
@@ -42,7 +62,8 @@ button { margin-top:15px; padding:10px; width:100%; }
 <h3>Adózás</h3>
 
 <label>
-<input type="checkbox" id="fiatal"> 25 év alatti (SZJA mentesség)
+<input type="checkbox" id="fiatal">
+25 év alatti (SZJA mentesség)
 </label>
 
 <button onclick="szamol()">Számol</button>
@@ -51,32 +72,41 @@ button { margin-top:15px; padding:10px; width:100%; }
 
 <script>
 function szamol() {
-const alapber = +alapberEl.value;
+
+const alapber = +alapberEl.value || 0;
 
 const oraber = alapber / 174;
 
-const muszakpotlek = oraber * 0.30 * muszak30El.value;
-const vasarnappotlek = oraber * 0.50 * vasarnap50El.value;
+const muszakpotlek = oraber * 0.30 * (+muszak30El.value || 0);
+const vasarnappotlek = oraber * 0.50 * (+vasarnap50El.value || 0);
+
+const bonuszok =
+(+jelenletiEl.value || 0) +
+(+termekenysegEl.value || 0);
 
 const brutto =
 alapber +
 muszakpotlek +
 vasarnappotlek +
-+jelenletiEl.value +
-+termekenysegEl.value;
+bonuszok;
 
 const szja = fiatalEl.checked ? 0 : brutto * 0.15;
 const tb = brutto * 0.185;
 const netto = brutto - szja - tb;
 
 eredmeny.innerHTML = `
-Órabér (csak pótlékhoz): ${oraber.toFixed(2)} Ft<br>
-Műszakpótlék: ${muszakpotlek.toFixed(0)} Ft<br>
-Vasárnapi pótlék: ${vasarnappotlek.toFixed(0)} Ft<br><br>
-Bruttó: ${brutto.toFixed(0)} Ft<br>
-SZJA: ${szja.toFixed(0)} Ft<br>
-TB járulék: ${tb.toFixed(0)} Ft<br>
-Nettó: ${netto.toFixed(0)} Ft
+<div class="netto">Ennyit utalnak: ${netto.toFixed(0)} Ft</div>
+
+<hr>
+
+Alapbér: ${alapber.toFixed(0)} Ft<br>
+Pótlékok összesen: ${(muszakpotlek + vasarnappotlek).toFixed(0)} Ft<br>
+Bónuszok összesen: ${bonuszok.toFixed(0)} Ft<br>
+
+<hr>
+
+Bruttó összesen: ${brutto.toFixed(0)} Ft<br>
+Levonások összesen: ${(szja + tb).toFixed(0)} Ft
 `;
 }
 
