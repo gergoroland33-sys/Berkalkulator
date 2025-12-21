@@ -3,210 +3,284 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bérkalkulátor 12H</title>
+<title>Forvia SMT | Bérkalkulátor Pro</title>
 <style>
 :root {
---primary: #2563eb;
---secondary: #64748b;
---success: #16a34a;
---bg: #f8fafc;
---card: #ffffff;
+--primary: #3b82f6;
+--primary-hover: #2563eb;
+--bg: #0f172a;
+--card-bg: #1e293b;
+--card-border: #334155;
+--text-main: #f1f5f9;
+--text-muted: #94a3b8;
+--success: #10b981;
+--accent: #f59e0b;
 }
 
 body {
-font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+font-family: 'Inter', -apple-system, sans-serif;
 background-color: var(--bg);
+background-image: radial-gradient(circle at top right, #1e293b, #0f172a);
 margin: 0;
-padding: 15px;
-color: #1e293b;
+padding: 20px;
+color: var(--text-main);
+min-height: 100vh;
+display: flex;
+justify-content: center;
 }
 
 .container {
-max-width: 500px;
-margin: 0 auto;
+width: 100%;
+max-width: 550px;
 }
 
-h2 { text-align: center; color: #0f172a; margin-bottom: 20px; }
+header {
+text-align: center;
+margin-bottom: 30px;
+}
+
+header h1 {
+font-size: 1.5rem;
+font-weight: 800;
+letter-spacing: -0.025em;
+margin: 0;
+background: linear-gradient(to right, #60a5fa, #3b82f6);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
+header p {
+color: var(--text-muted);
+font-size: 0.9rem;
+margin-top: 5px;
+}
 
 .card {
-background: var(--card);
-padding: 20px;
-border-radius: 16px;
-box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-margin-bottom: 15px;
-}
-
-/* Keret elszámolás kiemelése */
-.card.highlight {
-background-color: #fffbeb;
-border: 1px solid #fef3c7;
+background: var(--card-bg);
+border: 1px solid var(--card-border);
+padding: 24px;
+border-radius: 20px;
+margin-bottom: 20px;
+box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
 }
 
 h3 {
-font-size: 1.1rem;
-margin-top: 0;
-margin-bottom: 15px;
+font-size: 0.85rem;
+text-transform: uppercase;
+letter-spacing: 0.1em;
 color: var(--primary);
-border-bottom: 1px solid #e2e8f0;
-padding-bottom: 8px;
+margin-top: 0;
+margin-bottom: 20px;
+display: flex;
+align-items: center;
+gap: 8px;
 }
 
-.input-group { margin-bottom: 15px; }
+h3::after {
+content: "";
+flex: 1;
+height: 1px;
+background: var(--card-border);
+}
+
+.input-group { margin-bottom: 18px; }
 
 label {
 display: block;
-font-size: 0.9rem;
-font-weight: 600;
-margin-bottom: 5px;
-color: var(--secondary);
+font-size: 0.85rem;
+font-weight: 500;
+margin-bottom: 8px;
+color: var(--text-muted);
 }
 
 input[type="number"] {
 width: 100%;
-padding: 12px;
-border: 1px solid #cbd5e1;
-border-radius: 8px;
+padding: 14px;
+background-color: #0f172a;
+border: 1px solid var(--card-border);
+border-radius: 12px;
 font-size: 16px;
+color: white;
 box-sizing: border-box;
-background-color: #fff;
+transition: all 0.2s;
 }
 
-input[type="checkbox"] {
-width: 18px;
-height: 18px;
-margin-right: 10px;
-vertical-align: middle;
+input[type="number"]:focus {
+outline: none;
+border-color: var(--primary);
+box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
 }
 
-.checkbox-label {
-font-size: 1rem;
-font-weight: 500;
-color: #1e293b;
+.checkbox-container {
+background: rgba(59, 130, 246, 0.05);
+padding: 12px;
+border-radius: 12px;
+border: 1px dashed var(--card-border);
 display: flex;
 align-items: center;
 cursor: pointer;
 }
 
-button {
-width: 100%;
-padding: 16px;
-background-color: var(--primary);
-color: white;
-border: none;
-border-radius: 12px;
-font-size: 1.1rem;
-font-weight: bold;
-cursor: pointer;
-transition: transform 0.1s;
+input[type="checkbox"] {
+accent-color: var(--primary);
+width: 20px;
+height: 20px;
+margin-right: 12px;
 }
 
-button:active { transform: scale(0.98); }
+.flex-row { display: flex; gap: 15px; }
+.flex-row > div { flex: 1; }
+
+button {
+width: 100%;
+padding: 18px;
+background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+color: white;
+border: none;
+border-radius: 16px;
+font-size: 1rem;
+font-weight: 700;
+cursor: pointer;
+box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+transition: all 0.2s;
+margin-top: 10px;
+}
+
+button:hover {
+filter: brightness(1.1);
+transform: translateY(-1px);
+}
+
+button:active { transform: translateY(1px); }
 
 .result-card {
 display: none;
-background: #ecfdf5;
-border: 2px solid var(--success);
-padding: 20px;
-border-radius: 16px;
-margin-top: 20px;
+background: linear-gradient(145deg, #064e3b, #065f46);
+padding: 30px;
+border-radius: 24px;
+margin-top: 25px;
+border: 1px solid rgba(16, 185, 129, 0.3);
+animation: slideUp 0.4s ease-out;
 }
 
-.netto-title { font-size: 0.9rem; color: #065f46; text-transform: uppercase; letter-spacing: 0.05em; }
-.netto-amount { font-size: 2.2rem; font-weight: 800; color: #065f46; margin: 5px 0; }
+@keyframes slideUp {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.netto-title { font-size: 0.8rem; color: #a7f3d0; text-transform: uppercase; font-weight: 600; }
+.netto-amount { font-size: 2.8rem; font-weight: 900; color: #fff; margin: 10px 0; }
 
 .breakdown {
-font-size: 0.95rem;
-line-height: 1.6;
-color: #334155;
-border-top: 1px dashed #a7f3d0;
-margin-top: 15px;
-padding-top: 15px;
+font-size: 0.9rem;
+line-height: 1.8;
+color: #d1fae5;
+border-top: 1px solid rgba(255,255,255,0.1);
+margin-top: 20px;
+padding-top: 20px;
 }
 
-.flex-row { display: flex; gap: 10px; }
-.flex-row > div { flex: 1; }
+.highlight-box {
+background: rgba(245, 158, 11, 0.1);
+border: 1px solid rgba(245, 158, 11, 0.2);
+padding: 12px;
+border-radius: 12px;
+}
+
+/* Mobil optimalizálás */
+@media (max-width: 480px) {
+.flex-row { flex-direction: column; gap: 0; }
+.netto-amount { font-size: 2.2rem; }
+}
 </style>
 </head>
 <body>
 
 <div class="container">
-<h2>Forvia SMT Bérkalkulátor</h2>
+<header>
+<h1>FORVIA SMT</h1>
+<p>Bérkalkulátor & Fizetés Előrejelző</p>
+</header>
 
 <div class="card">
-<h3>Alapbér</h3>
+<h3>Alapbér és Kedvezmény</h3>
 <div class="input-group">
-<label>Besorolási bér (Ft)</label>
-<input type="number" id="alapber" placeholder="Írd be az alapbéred">
+<label>Besorolási alapbér (Ft)</label>
+<input type="number" id="alapber" placeholder="Példa: 450000">
 </div>
-<label class="checkbox-label">
-<input type="checkbox" id="fiatal"> 25 év alatti (SZJA mentes)
+<label class="checkbox-container">
+<input type="checkbox" id="fiatal">
+<span>25 év alatti SZJA mentesség</span>
 </label>
 </div>
 
 <div class="card">
-<h3>Beosztás szerinti pótlékok</h3>
+<h3>Műszak és Pótlékok</h3>
 <div class="flex-row">
 <div class="input-group">
-<label>Műszak 30% (óra)</label>
-<input type="number" id="m30" placeholder="Összes éjszakás óra">
+<label>Éjszakás 30% (óra)</label>
+<input type="number" id="m30" placeholder="0">
 </div>
 <div class="input-group">
 <label>Vasárnap 50% (óra)</label>
-<input type="number" id="v50" placeholder="Szo.éjfél-Vas.éjfélig">
+<input type="number" id="v50" placeholder="0">
 </div>
 </div>
 </div>
 
 <div class="card">
-<h3>Túlórák (Pihenőnapi)</h3>
+<h3>Túlórák</h3>
+<div class="flex-row">
 <div class="input-group">
-<label>Sima túlóra (óra)</label>
+<label>Sima (óra)</label>
 <input type="number" id="t_sima" placeholder="0">
 </div>
 <div class="input-group">
-<label>Éjszakai túlóra (óra)</label>
+<label>Éjszakai (óra)</label>
 <input type="number" id="t_ejszaka" placeholder="0">
+</div>
 </div>
 <div class="input-group">
 <label>Vasárnapi túlóra (óra)</label>
 <input type="number" id="t_vasarnap" placeholder="0">
 </div>
 
-<div class="input-group" style="background-color: #fffbeb; padding: 10px; border-radius: 8px; border: 1px solid #fef3c7;">
-<label style="color: #92400e;">Keret elszámolás (óra)</label>
-<input type="number" id="t_keret" placeholder="0">
+<div class="input-group highlight-box">
+<label style="color: var(--accent);">Keret elszámolás (óra)</label>
+<input type="number" id="t_keret" placeholder="0" style="border-color: rgba(245, 158, 11, 0.3);">
 </div>
 </div>
 
 <div class="card">
 <h3>Bónuszok</h3>
+<div class="flex-row">
 <div class="input-group">
-<label>Jelenléti bónusz (Ft)</label>
+<label>Jelenléti (Ft)</label>
 <input type="number" id="b_jelenleti" placeholder="0">
 </div>
 <div class="input-group">
-<label>Termelékenységi bónusz (Ft)</label>
+<label>Termelékenység (Ft)</label>
 <input type="number" id="b_term" placeholder="0">
 </div>
 </div>
+</div>
 
-<button onclick="szamol()">Számítás futtatása</button>
+<button onclick="szamol()">Kalkuláció Futtatása</button>
 
 <div id="eredmeny_doboz" class="result-card">
-<div class="netto-title">Várható nettó utalás:</div>
+<div class="netto-title">Várható nettó utalás</div>
 <div class="netto-amount" id="netto_osszeg">0 Ft</div>
 <div class="breakdown" id="reszletek"></div>
 </div>
 </div>
 
 <script>
+// A logikád változatlan maradt, csak a formázást kötöttem be
 function szamol() {
 const alap = +document.getElementById("alapber").value || 0;
 const isFiatal = document.getElementById("fiatal").checked;
-
 const o174 = 174;
 const o180 = 180;
-
 const oraber174 = alap / o174;
 const oraber180 = alap / o180;
 
@@ -219,17 +293,14 @@ const h_vas = +document.getElementById("t_vasarnap").value || 0;
 const h_keret = +document.getElementById("t_keret").value || 0;
 
 const ossz_t_ora = h_sima + h_ejsz + h_vas;
-
 const t_alap_resz = oraber180 * ossz_t_ora;
 const t_potlek_100 = oraber174 * 1.0 * ossz_t_ora;
 const t_extra_30 = oraber174 * 0.3 * h_ejsz;
 const t_extra_50 = oraber174 * 0.5 * h_vas;
-
 const keret_alap = oraber180 * h_keret;
 const keret_potlek_50 = oraber174 * 0.5 * h_keret;
 
 const tulora_total = t_alap_resz + t_potlek_100 + t_extra_30 + t_extra_50 + keret_alap + keret_potlek_50;
-
 const b1 = +document.getElementById("b_jelenleti").value || 0;
 const b2 = +document.getElementById("b_term").value || 0;
 const ossz_bonusz = b1 + b2;
@@ -239,30 +310,27 @@ const brutto = alap + p_m30 + p_v50 + tulora_total + ossz_bonusz;
 let szja = brutto * 0.15;
 if (isFiatal) {
 const mentes_keret = 576601;
-if (brutto <= mentes_keret) {
-szja = 0;
-} else {
-szja = (brutto - mentes_keret) * 0.15;
-}
+szja = (brutto <= mentes_keret) ? 0 : (brutto - mentes_keret) * 0.15;
 }
 
 const tb = brutto * 0.185;
 const netto = brutto - szja - tb;
 
-document.getElementById("eredmeny_doboz").style.display = "block";
+const edoboz = document.getElementById("eredmeny_doboz");
+edoboz.style.display = "block";
 document.getElementById("netto_osszeg").innerText = Math.round(netto).toLocaleString() + " Ft";
 
 document.getElementById("reszletek").innerHTML = `
-<b>Bruttó bér:</b> ${Math.round(brutto).toLocaleString()} Ft<br>
-- Ebből túlóra/keret: ${Math.round(tulora_total).toLocaleString()} Ft<br>
-- Ebből bónuszok: ${ossz_bonusz.toLocaleString()} Ft<br>
-<br>
-<b>Levonások:</b><br>
-- SZJA (15%): ${Math.round(szja).toLocaleString()} Ft<br>
-- TB járulék (18,5%): ${Math.round(tb).toLocaleString()} Ft
+<div style="display:flex; justify-content:space-between"><span>Bruttó összesen:</span> <b>${Math.round(brutto).toLocaleString()} Ft</b></div>
+<div style="display:flex; justify-content:space-between; font-size:0.8rem; opacity:0.8"><span>- Pótlékok + Túlóra:</span> <span>${Math.round(p_m30 + p_v50 + tulora_total).toLocaleString()} Ft</span></div>
+<div style="display:flex; justify-content:space-between; font-size:0.8rem; opacity:0.8"><span>- Bónuszok:</span> <span>${ossz_bonusz.toLocaleString()} Ft</span></div>
+<div style="margin-top:10px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px">
+<div style="display:flex; justify-content:space-between"><span>SZJA (15%):</span> <span>${Math.round(szja).toLocaleString()} Ft</span></div>
+<div style="display:flex; justify-content:space-between"><span>TB (18.5%):</span> <span>${Math.round(tb).toLocaleString()} Ft</span></div>
+</div>
 `;
 
-document.getElementById("eredmeny_doboz").scrollIntoView({ behavior: 'smooth' });
+edoboz.scrollIntoView({ behavior: 'smooth' });
 }
 </script>
 
